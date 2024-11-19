@@ -3,3 +3,9 @@ export interface ILevarage {
     name: string
     exchange: string
 }
+
+export interface IAdditionalOptions {
+    first: string
+    second: string
+    third: string
+}

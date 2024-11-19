@@ -5,7 +5,7 @@ import { IRuleSignal } from "../models/IRuleSignal";
 import { ITrend } from "../models/ITrend";
 import { ICombination } from "../models/ICombination";
 import { ITradingPair } from "../models/ITradingPair";
-import { ILevarage } from "../models/ILevarage";
+import { IAdditionalOptions, ILevarage } from "../models/ILevarage";
 import { IOption } from "../models/IOption";
 import { DataInterace, IDate } from "../models/IDates";
 
@@ -88,5 +88,13 @@ export default class RuleService{
 
     static async getTopSignal(timeframe: number, pair: string): Promise<AxiosResponse<IRuleSignal[]>>{
         return $api.get<IRuleSignal[]>(`/dumps/topsignals/${timeframe}/${pair}`);
+    }
+
+    static async getAdditionalOptions(): Promise<AxiosResponse<IAdditionalOptions>>{
+        return $api.get<IAdditionalOptions>(`/settins/options`);
+    }
+
+    static async saveAdditionalOptions(options: IAdditionalOptions): Promise<AxiosResponse<IAdditionalOptions>>{
+        return $api.put<IAdditionalOptions>(`/settings/options`, options);
     }
 }

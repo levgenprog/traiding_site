@@ -55,6 +55,54 @@
     color: red;
 }
 
+.addSection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 40%;
+    margin: 0 auto;
+}
+
+.svgIcon {
+    padding-top: 1rem;
+    width: 40px;
+    height: 30px;
+}
+
+.selectContainer {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1rem auto;
+}
+
+.selectContainer label {
+    font-size: .7rem;
+}
+
+.selectContainer span {
+    color: #ffffff;
+    font-size: .9rem;
+    margin-bottom: 10px;
+}
+
+.selectContainer select {
+    background-color: #5D5FEF;
+    color: #ffffff;
+    border: none;
+    padding: .7rem .5rem;
+    border-radius: 5px;
+    font-size: .9rem;
+    outline: none;
+}
+
+.selectContainer select option {
+    background-color: white;
+    color: #2a2e39;
+}
+
+
 @media (max-width: 768px) {
     .settingsForm {
         width: 90%;
@@ -89,5 +137,14 @@
 
     .buttonGroup {
         margin: 0.5rem;
+    }
+
+    .addSection {
+        max-width: 80%;
+    }
+
+    .svgIcon {
+        width: 30px;
+        height: 20px;
     }
 }

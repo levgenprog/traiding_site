@@ -529,6 +529,47 @@ class RulesController {
         }
     }
 
+    async getAdditionalOptions(req, res) {
+        try {
+            const query  = `
+            SELECT data 
+            FROM somewhere`;
+
+            const result = await pool.query(query);
+
+            if (result.rows.length > 0) {
+                res.json(result.rows);
+            } else {
+                res.status(404).json({ message: 'Not found' });
+            }
+        } catch (error) {
+            console.error('Error getting data:', error);
+            res.status(500).json({ message: 'An error occurred retrieving the data' });
+        }
+    }
+
+    async updateAdditionalOptions(req, res) {
+        try {
+            const options = req.body;
+            const query = `
+                UPDATE something
+                SET something = $1
+                RETURNING *
+            `;
+    
+            const result = await pool.query(query, [options]);
+    
+            if (result.rows.length > 0) {
+                res.json(result.rows[0]);
+            } else {
+                res.status(404).json({ message: 'Option is not found' });
+            }
+        } catch (error) {
+            console.error('Error changing option:', error);
+            res.status(500).json({ message: 'An error occurred' });
+        }
+    }
+
 }
 
 export default new RulesController();

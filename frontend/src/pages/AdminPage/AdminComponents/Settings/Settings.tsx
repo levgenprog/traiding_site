@@ -2,7 +2,8 @@ import { FC, useEffect, useState } from "react";
 import styles from './Settings.module.css';
 import RegularButton from "../../../../components/UI/Buttons/RegularButton";
 import RuleService from "../../../../servises/RuleService";
-import { ILevarage } from "../../../../models/ILevarage";
+import { IAdditionalOptions, ILevarage } from "../../../../models/ILevarage";
+import { Button } from "@mui/material";
 
 const Settings: FC = () => {
   const [levarages, setLevarages] = useState<ILevarage[]>([]);
@@ -10,6 +11,13 @@ const Settings: FC = () => {
   const [key, setKey] = useState("");
   const [secretKey, setSecretKey] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+  const [secondOptions, setSecondOptions] = useState(['3d', '1d']);
+  const [thirdOptions, setThirdOptions] = useState(['3d', '1d']);
+  const [formData, setFormData] = useState<IAdditionalOptions>({
+    first: '7d',
+    second: '3d',
+    third: '4h'
+  })
 
   const [validationError, setValidationError] = useState('');
 
@@ -22,7 +30,10 @@ const Settings: FC = () => {
       
       setLeverage(response.filter((elem) => elem.id === settingsResponse.selected_lev)[0].name);
       setKey(settingsResponse.apikey);
-      setSecretKey(settingsResponse.secret);      
+      setSecretKey(settingsResponse.secret);     
+
+      const additionalOptionsResponse = (await RuleService.getAdditionalOptions()).data;
+      setFormData(additionalOptionsResponse);
     } catch(e: any){
       console.error(e);
     }
@@ -46,6 +57,48 @@ const Settings: FC = () => {
       } catch(e: any){
         console.error(e);
       }
+    }
+  };
+
+  const handleAdditionalOptionsUpdate = async () => {
+    try {
+      await RuleService.saveAdditionalOptions(formData);
+    } catch(e: any){
+      console.error(e);
+    }
+  };
+
+  const handleFirstOptionChange = (value: string) => {
+    switch(value) {
+      case '7d':
+        setSecondOptions(['3d', '1d']);
+        setThirdOptions(['4h']);
+        setFormData((prev) => ({
+          ...prev,
+          first: value,
+          second: '3d',
+          third: '4h'
+        }));
+        break;
+      case '3d':
+        setSecondOptions(['1d', '4h']);
+        setThirdOptions(['1h']);
+        setFormData((prev) => ({
+          ...prev,
+          first: value,
+          second: '1d',
+          third: '1h'
+        }));
+        break;
+      case '1d':
+        setSecondOptions(['4h']);
+        setThirdOptions(['1h', '15m']);
+        setFormData((prev) => ({
+          ...prev,
+          first: value,
+          second: '4h',
+          third: '1h'
+        }));
     }
   };
 
@@ -125,6 +178,47 @@ const Settings: FC = () => {
         </div>
 
       </form>
+
+        <h2>Дополнительные Настройки</h2>
+      <div className={styles.addSection}>
+        <div className={styles.selectContainer}>
+          <label className={styles.label}>Первое</label>
+          <select
+            value={formData.first}
+            onChange={(e) => handleFirstOptionChange(e.target.value)}
+            >
+            <option value={'7d'}>7d</option>
+            <option value={'3d'}>3d</option>
+            <option value={'1d'}>1d</option>
+          </select>
+        </div>
+        <svg className={styles.svgIcon} viewBox="-0.16 -0.16 16.32 16.32" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M8 6L8 2L10 2L16 8L10 14L8 14L8 10L-1.74845e-07 10L-3.01991e-07 6L8 6Z" fill="#ffffff"></path> </g></svg>
+        <div className={styles.selectContainer}>
+          <label className={styles.label}>Второе</label>
+          <select 
+            value={formData.second}
+            onChange={(e) => setFormData((prev) => ({
+            ...prev,
+            second: e.target.value
+          }))}>
+            {secondOptions.map((val) => (
+              <option value={val} key={val}>{val}</option>
+            )) }
+          </select>
+        </div>
+        <svg className={styles.svgIcon} viewBox="-0.16 -0.16 16.32 16.32" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M8 6L8 2L10 2L16 8L10 14L8 14L8 10L-1.74845e-07 10L-3.01991e-07 6L8 6Z" fill="#ffffff"></path> </g></svg>
+        <div className={styles.selectContainer}>
+          <label className={styles.label}>Третье</label>
+          <select >
+            {thirdOptions.map((val) => (
+              <option value={val} key={val}>{val}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+        <Button variant="contained" color="success" size="small">
+          Сохранить
+        </Button>
     </div>
   );
 };
