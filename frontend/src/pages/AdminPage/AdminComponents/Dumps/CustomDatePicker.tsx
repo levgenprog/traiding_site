@@ -99,7 +99,7 @@ const CustomDatePicker = ({
     }, [open])
 
     const today = dayjs();
-    const minDate = today.subtract(4, 'day');
+    const minDate = today.subtract(14, 'day');
     const maxDate = today;
 
     return (

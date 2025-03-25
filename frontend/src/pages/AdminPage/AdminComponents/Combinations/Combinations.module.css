@@ -37,28 +37,20 @@ caption{
     font-size: 1rem;
 }
 
-.menu{
-    display: flex;
-    width: 60%;
-    list-style-type: none;
-    margin: 0 auto;
-    justify-content: space-around;
-    align-items: center;
-    padding: 2%;   
+
+.menu {
+    padding: 5px 10px;
 }
 
-.menu li{
-    cursor: pointer;
-    padding: 10px 20px;
-}
-
-.menu li:hover{
+.menu:hover{
     outline: 1px solid white;
     outline-offset: -1px;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 .menu_active{
+    padding: 5px 10px;
     border-radius: 10px;
     background-color: rgb(126, 126, 126);
 }
@@ -191,6 +183,44 @@ input:checked + .slider:before {
     outline: none;
   }
 
+  .addSection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 40%;
+    margin: 0 auto;
+}
+.svgIcon {
+    padding-top: 1rem;
+    width: 40px;
+    height: 30px;
+}
+
+.selectContainer {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1rem auto;
+}
+
+
+
+.selectContainer select {
+    background-color: #5D5FEF;
+    color: #ffffff;
+    border: none;
+    padding: .7rem .5rem;
+    border-radius: 5px;
+    font-size: .9rem;
+    outline: none;
+}
+
+.selectContainer select option {
+    background-color: white;
+    color: #2a2e39;
+}
+
 /* Media query to hide table and show cards */
 @media (max-width: 1080px) {
     .combTable {
@@ -202,6 +232,12 @@ input:checked + .slider:before {
     }
 }
 
+@media (min-width: 768px) {
+    .settingsForm {
+        width: 90%;
+    }
+}
+
 @media (max-width: 560px) {
     .menu {
         display: none;
@@ -209,6 +245,14 @@ input:checked + .slider:before {
 
     .selectContainer {
         display: flex;
+    }
+
+    .addSection {
+        max-width: 80%;
+    }
+
+    .buttonGroup {
+        margin: 0.5rem;
     }
 
     .list {
@@ -222,4 +266,17 @@ input:checked + .slider:before {
         border: none;
     }
 
+    .label,
+    .select,
+    .input,
+    .span,
+    .error {
+        font-size: 1rem;
+    }
+
+    .svgIcon {
+        width: 30px;
+        height: 20px;
+        padding-top: 0;
+    }
 }

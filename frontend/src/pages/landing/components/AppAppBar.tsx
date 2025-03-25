@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import ToggleColorMode from './ToggleColorMode';
+import { useNavigate } from 'react-router-dom';
 
 // const logoStyle = {
 //   width: '140px',
@@ -44,6 +45,8 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
     }
   };
 
+  const navigate = useNavigate();
+  
   return (
     <div>
       <AppBar
@@ -97,20 +100,20 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                     Features
                   </Typography>
                 </MenuItem>
-                <MenuItem
+                {/* <MenuItem
                   onClick={() => scrollToSection('testimonials')}
                   sx={{ py: '6px', px: '12px' }}
                 >
                   <Typography variant="body2" color="text.primary">
                     Testimonials
                   </Typography>
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem
                   onClick={() => scrollToSection('highlights')}
                   sx={{ py: '6px', px: '12px' }}
                 >
                   <Typography variant="body2" color="text.primary">
-                    Highlights
+                    Start Now
                   </Typography>
                 </MenuItem>
                 <MenuItem
@@ -142,8 +145,7 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                 color="primary"
                 variant="text"
                 size="small"
-                component="a"
-                href="/login"
+                onClick={() => navigate('/login')}
               >
                 Sign in
               </Button>
@@ -151,8 +153,7 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                 color="primary"
                 variant="contained"
                 size="small"
-                component="a"
-                href="/login"
+                onClick={() => navigate('/login')}
               >
                 Sign up
               </Button>
@@ -189,11 +190,11 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                   <MenuItem onClick={() => scrollToSection('features')}>
                     Features
                   </MenuItem>
-                  <MenuItem onClick={() => scrollToSection('testimonials')}>
+                  {/* <MenuItem onClick={() => scrollToSection('testimonials')}>
                     Testimonials
-                  </MenuItem>
+                  </MenuItem> */}
                   <MenuItem onClick={() => scrollToSection('highlights')}>
-                    Highlights
+                    Start Now
                   </MenuItem>
                   <MenuItem onClick={() => scrollToSection('pricing')}>
                     Pricing

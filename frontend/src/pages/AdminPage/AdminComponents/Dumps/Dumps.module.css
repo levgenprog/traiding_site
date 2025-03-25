@@ -25,6 +25,7 @@
     border-collapse: collapse;
     margin-top: 2rem;
     margin: 0 auto;
+    position: relative;
 }
 
 .pairsTable th,

@@ -11,7 +11,7 @@ interface TrendsInterface {
   timeframe: Section
 }
 
-type RuleTypes = 'R2Short' | '4AShort' | '4BShort' | 'GFLYShort' | 'R1Long' | '3ALong' | '3BLong' | 'BFLYLong' | '';
+type RuleTypes = 'ZeroVN' | 'VN' | 'ZeroNN2' | 'ZeroNN' | 'NN' | 'ZeroVN2' | '';
 
 const Trends: FC<TrendsInterface> = ({ timeframe }) => {
   const [trends, setTrends] = useState<ITrend[]>([]);
@@ -116,17 +116,14 @@ const Trends: FC<TrendsInterface> = ({ timeframe }) => {
                   <div className={`${styles.subtable} ${styles.oo}`}>
                     <b>Short Signals</b>
                     <ul>
-                      <li onClick={() => showRulesDetail(elem.trendid, 'R2Short')}>
-                        <b>R2Short:</b> {elem.rshort}
+                      <li onClick={() => showRulesDetail(elem.trendid, 'ZeroVN')}>
+                        <b>ZeroVN:</b> {elem.rshort}
                       </li>
-                      <li onClick={() => showRulesDetail(elem.trendid, '4AShort')}>
-                        <b>4AShort:</b> {elem.ashort}
+                      <li onClick={() => showRulesDetail(elem.trendid, 'VN')}>
+                        <b>VN:</b> {elem.ashort}
                       </li>
-                      <li onClick={() => showRulesDetail(elem.trendid, '4BShort')}>
-                        <b>4BShort:</b> {elem.bshort}
-                      </li>
-                      <li onClick={() => showRulesDetail(elem.trendid, 'GFLYShort')}>
-                        <b>GFLY:</b> {elem.gfly}
+                      <li onClick={() => showRulesDetail(elem.trendid, 'ZeroNN2')}>
+                        <b>ZeroNN2:</b> {elem.bshort}
                       </li>
                     </ul>
                   </div>
@@ -136,17 +133,14 @@ const Trends: FC<TrendsInterface> = ({ timeframe }) => {
                   <div className={styles.subtable}>
                     <b>Long Signals</b>
                     <ul>
-                      <li onClick={() => showRulesDetail(elem.trendid, 'R1Long')}>
-                        <b>R1Long:</b> {elem.rlong}
+                      <li onClick={() => showRulesDetail(elem.trendid, 'ZeroNN')}>
+                        <b>ZeroNN:</b> {elem.rlong}
                       </li>
-                      <li onClick={() => showRulesDetail(elem.trendid, '3ALong')}>
-                        <b>3ALong:</b> {elem.along}
+                      <li onClick={() => showRulesDetail(elem.trendid, 'NN')}>
+                        <b>NN:</b> {elem.along}
                       </li>
-                      <li onClick={() => showRulesDetail(elem.trendid, '3BLong')}>
-                        <b>3BLong:</b> {elem.blong}
-                      </li>
-                      <li onClick={() => showRulesDetail(elem.trendid, 'BFLYLong')}>
-                        <b>BFLY:</b> {elem.bfly}
+                      <li onClick={() => showRulesDetail(elem.trendid, 'ZeroVN2')}>
+                        <b>ZeroVN2:</b> {elem.blong}
                       </li>
                     </ul>
                   </div>
@@ -193,42 +187,34 @@ const Trends: FC<TrendsInterface> = ({ timeframe }) => {
                     </td>
                     <td>
                       <ul className={styles.subtable}>
-                        <li onClick={() => showRulesDetail(elem.trendid, 'R2Short')}>
-                          <div><b>R2Short:</b></div>
+                        <li onClick={() => showRulesDetail(elem.trendid, 'ZeroVN')}>
+                          <div><b>ZeroVN:</b></div>
                           <div className={styles.value}>{elem.rshort}</div>
                         </li>
-                        <li onClick={() => showRulesDetail(elem.trendid, '4AShort')}>
-                          <div><b>4AShort:</b></div>
+                        <li onClick={() => showRulesDetail(elem.trendid, 'VN')}>
+                          <div><b>VN:</b></div>
                           <div className={styles.value}>{elem.ashort}</div>
                         </li>
-                        <li onClick={() => showRulesDetail(elem.trendid, '4BShort')}>
-                          <div><b>4BShort:</b></div>
+                        <li onClick={() => showRulesDetail(elem.trendid, 'ZeroNN2')}>
+                          <div><b>ZeroNN2:</b></div>
                           <div className={styles.value}>{elem.bshort}</div>
-                        </li>
-                        <li onClick={() => showRulesDetail(elem.trendid, 'GFLYShort')}>
-                          <div><b>GFLY:</b></div>
-                          <div className={styles.value}>{elem.gfly}</div>
                         </li>
                       </ul>
                     </td>
                     <td>{elem.total_short}</td>
                     <td>
                       <ul className={styles.subtable}>
-                        <li onClick={() => showRulesDetail(elem.trendid, 'R1Long')}>
-                          <div><b>R1Long:</b></div>
+                        <li onClick={() => showRulesDetail(elem.trendid, 'ZeroNN')}>
+                          <div><b>ZeroNN:</b></div>
                           <div className={styles.value}>{elem.rlong}</div>
                         </li>
-                        <li onClick={() => showRulesDetail(elem.trendid, '3ALong')}>
-                          <div><b>3ALong:</b></div>
+                        <li onClick={() => showRulesDetail(elem.trendid, 'NN')}>
+                          <div><b>NN:</b></div>
                           <div className={styles.value}>{elem.along}</div>
                         </li>
-                        <li onClick={() => showRulesDetail(elem.trendid, '3BLong')}>
-                          <div><b>3BLong:</b></div>
+                        <li onClick={() => showRulesDetail(elem.trendid, 'ZeroVN2')}>
+                          <div><b>ZeroVN2:</b></div>
                           <div className={styles.value}>{elem.blong}</div>
-                        </li>
-                        <li onClick={() => showRulesDetail(elem.trendid, 'BFLYLong')}>
-                          <div><b>BFLY:</b></div>
-                          <div className={styles.value}>{elem.bfly}</div>
                         </li>
                       </ul>
                     </td>

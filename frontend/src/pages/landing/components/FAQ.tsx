@@ -13,7 +13,7 @@ export default function FAQ() {
   const [expanded, setExpanded] = React.useState<string | false>(false);
 
   const handleChange =
-    (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     };
 
@@ -62,7 +62,7 @@ export default function FAQ() {
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
               You can reach our customer support team by emailing
-              <Link> support@email.com </Link>
+              <Link> support@flowcapital.ai </Link>
               or calling our toll-free number. We&apos;re here to assist you
               promptly.
             </Typography>
@@ -78,7 +78,7 @@ export default function FAQ() {
             id="panel2d-header"
           >
             <Typography component="h3" variant="subtitle2">
-              Can I return the product if it doesn&apos;t meet my expectations?
+            What do I need to start using FlowCapital bot?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -87,9 +87,7 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              Absolutely! We offer a hassle-free return policy. If you&apos;re not
-              completely satisfied, you can return the product within [number of
-              days] days for a full refund or exchange.
+              To start using FlowCapital AI, all you need is an account on one of our partner-exchanges, assets to manage on that account, and the FlowCapital AI platform.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -103,7 +101,7 @@ export default function FAQ() {
             id="panel3d-header"
           >
             <Typography component="h3" variant="subtitle2">
-              What makes your product stand out from others in the market?
+            Do I need to transfer my funds outside my account?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -112,9 +110,7 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              Our product distinguishes itself through its adaptability, durability,
-              and innovative features. We prioritize user satisfaction and
-              continually strive to exceed expectations in every aspect.
+              No, funds do not need to be transferred anywhere for any reason.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -128,7 +124,7 @@ export default function FAQ() {
             id="panel4d-header"
           >
             <Typography component="h3" variant="subtitle2">
-              Is there a warranty on the product, and what does it cover?
+            What are the risks?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -137,10 +133,9 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              Yes, our product comes with a [length of warranty] warranty. It covers
-              defects in materials and workmanship. If you encounter any issues
-              covered by the warranty, please contact our customer support for
-              assistance.
+              Most of the risks are associated with our strategies as past performance is no guarantee of future results. We cannot fully eliminate unprecedented events in the market, though we actively manage these.
+              <br></br><br></br>
+              When the market goes down, retail investors can desire to short futures, resulting in a funding fee decrease. It is possible that the fees may even dive into the negative at times. If fees are extremely low, such as -0.2%, FlowCapital can close positions while protecting profits and capital.
             </Typography>
           </AccordionDetails>
         </Accordion>

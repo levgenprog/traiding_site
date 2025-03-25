@@ -5,7 +5,7 @@ import { IRuleSignal } from "../models/IRuleSignal";
 import { ITrend } from "../models/ITrend";
 import { ICombination } from "../models/ICombination";
 import { ITradingPair } from "../models/ITradingPair";
-import { IAdditionalOptions, ILevarage } from "../models/ILevarage";
+import { IAdditionalOptions } from "../models/ILevarage";
 import { IOption } from "../models/IOption";
 import { DataInterace, IDate } from "../models/IDates";
 
@@ -54,10 +54,6 @@ export default class RuleService{
         return $api.get<ITradingPair[]>(`/tradingpairs/top/`);
     }
 
-    static async getLevarages(): Promise<AxiosResponse<ILevarage[]>>{
-        return $api.get<ILevarage[]>(`/settings/levarages/`);
-    }
-
     static async getOptions(): Promise<AxiosResponse<IOption>>{
         return $api.get<IOption>(`/settings/options/`);
     }
@@ -90,11 +86,11 @@ export default class RuleService{
         return $api.get<IRuleSignal[]>(`/dumps/topsignals/${timeframe}/${pair}`);
     }
 
-    static async getAdditionalOptions(): Promise<AxiosResponse<IAdditionalOptions>>{
-        return $api.get<IAdditionalOptions>(`/settins/options`);
+    static async getAdditionalOptions(): Promise<AxiosResponse<IAdditionalOptions[]>>{
+        return $api.get<IAdditionalOptions[]>(`/settings/options/timeframe`);
     }
 
     static async saveAdditionalOptions(options: IAdditionalOptions): Promise<AxiosResponse<IAdditionalOptions>>{
-        return $api.put<IAdditionalOptions>(`/settings/options`, options);
+        return $api.put<IAdditionalOptions>(`/settings/options/timeframe`, options);
     }
 }

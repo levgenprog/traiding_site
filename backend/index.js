@@ -8,7 +8,7 @@ import router from './router/index.mjs';
 import errorMiddleware from './middlewares/error-middleware.mjs';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocs from './swagger.mjs'
-import https from 'https';
+import http from 'http';
 import fs from 'fs';
 
 dotenv.config();
@@ -28,9 +28,10 @@ app.use('/api', router);
 app.use(errorMiddleware);
 
 // const sslServer = https.createServer({
-//     key: fs.readFileSync('/etc/letsencrypt/live/yerlan.space/privkey.pem'),
-//     cert: fs.readFileSync('/etc/letsencrypt/live/yerlan.space/fullchain.pem')
+//     key: fs.readFileSync('/etc/letsencrypt/live/flowcapital.ai/privkey.pem'),
+//     cert: fs.readFileSync('/etc/letsencrypt/live/flowcapital.ai/fullchain.pem')
 //   }, app);
+const sslServer = http.createServer(app);
 
 const start = async () => {
     try {
@@ -38,8 +39,8 @@ const start = async () => {
             useNewUrlParser: true,
             useUnifiedTopology: true
         });
-        app.listen(PORT, () => console.log('Server is running on port ' + PORT));
-        // sslServer.listen(PORT, () => console.log('Server is running on port ' + PORT));
+        // app.listen(PORT, () => console.log('Server is running on port ' + PORT));
+        sslServer.listen(PORT, () => console.log('Server is running on port ' + PORT));
     } catch (e) {
         console.log(e);
     }

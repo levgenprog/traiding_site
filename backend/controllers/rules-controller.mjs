@@ -14,7 +14,7 @@ class RulesController {
 
     async getAllRules(req, res) {
         try{
-            const users = await pool.query(`SELECT * FROM rules`);
+            const users = await pool.query(`SELECT * FROM rules WHERE hidden = false`);
             res.json(users.rows);
         } catch(e){
             console.error('Error getting rules:', e);
@@ -140,8 +140,7 @@ class RulesController {
             const timeframe = req.params.timeframe;
             const query = `
             SELECT trendid, longs, shorts, to_char(timestamp, 'YYYY-MM-DD HH24:MI:SSOF') AS timestamp,
-                timeframe, candle_num, candle_color, rlong, along, blong, bfly, rshort, ashort, bshort, 
-                gfly, total_long, total_short, data
+                timeframe, candle_num, candle_color, rlong, along, blong, rshort, ashort, bshort, total_long, total_short, data
             FROM public.trends
             WHERE timeframe = $1
             ORDER BY timestamp DESC
@@ -387,7 +386,7 @@ class RulesController {
             FROM public.toppairs
             WHERE timeframe = '1d'
             ORDER BY timestamp DESC
-            LIMIT 4`;
+            LIMIT 14`;
 
             const result = await pool.query(query);
 
@@ -470,15 +469,14 @@ class RulesController {
     async getTopSignal(req, res){
         try{
             const timeframe = req.params.timeframe;
-            const tf = timeframe === '1' ? '1h' : timeframe === '4' ? '4h' : '15m';
+            const tf = timeframe === '1' ? '1h' : '15m';
             
             const pair = req.params.pair;
     
             // First query to get the first set of signals
             const firstQuery = `
             SELECT * FROM public.signals
-            WHERE (rule = 'NN' OR rule = 'VN') AND
-                  (tradingpair = $1) AND
+            WHERE (tradingpair = $1) AND
                   (timeframe = $2)
             ORDER BY timestamp DESC
             LIMIT 1
@@ -487,32 +485,24 @@ class RulesController {
             const firstResult = await pool.query(firstQuery, [pair, tf]);
             let secondQuery = '';
     
-            if (firstResult.rows.length > 0 && firstResult.rows[0].rule === 'NN') {
+            if (firstResult.rows.length > 0) {
                 secondQuery = `
                 SELECT * FROM public.signals
-                WHERE data = 'long' AND
-                      (tradingpair = $1) AND
-                      (timeframe = '5m' OR timeframe = '3m')
-                ORDER BY timestamp DESC
-                LIMIT 1
-                `;
-            } else {
-                secondQuery = `
-                SELECT * FROM public.signals
-                WHERE data = 'short' AND
-                      (tradingpair = $1) AND
-                      (timeframe = '5m' OR timeframe = '3m')
+                WHERE (signalid = $1) AND
+                      (timeframe = $2)
                 ORDER BY timestamp DESC
                 LIMIT 1
                 `;
             }
     
-            const secondResult = await pool.query(secondQuery, [pair]);
+            const secondResult = await pool.query(secondQuery, [firstResult.rows[0].refer_signalid, firstResult.rows[0].refer_timeframe]);
             const results = [];
     
             // Combine results from both queries
             if (firstResult.rows.length > 0) {
                 results.push(firstResult.rows[0]);
+            } else {
+                results.push('itd');
             }
             if (secondResult.rows.length > 0) {
                 results.push(secondResult.rows[0]);
@@ -532,8 +522,13 @@ class RulesController {
     async getAdditionalOptions(req, res) {
         try {
             const query  = `
-            SELECT data 
-            FROM somewhere`;
+                SELECT 
+                    first, 
+                    second, 
+                    third 
+                FROM 
+                    timeframesettings
+                LIMIT 1;`;
 
             const result = await pool.query(query);
 
@@ -550,17 +545,23 @@ class RulesController {
 
     async updateAdditionalOptions(req, res) {
         try {
-            const options = req.body;
+            const { first, second, third } = req.body; // Destructure the options from req.body
             const query = `
-                UPDATE something
-                SET something = $1
-                RETURNING *
-            `;
-    
-            const result = await pool.query(query, [options]);
-    
+                UPDATE 
+                    timeframesettings
+                SET 
+                    first = $1,
+                    second = $2,
+                    third = $3,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE 
+                    id = 1
+                RETURNING *;`;
+        
+            const result = await pool.query(query, [first, second, third]); // Pass the values individually
+        
             if (result.rows.length > 0) {
-                res.json(result.rows[0]);
+                res.json(result.rows[0]); // Return the updated row
             } else {
                 res.status(404).json({ message: 'Option is not found' });
             }
@@ -568,7 +569,7 @@ class RulesController {
             console.error('Error changing option:', error);
             res.status(500).json({ message: 'An error occurred' });
         }
-    }
+    }    
 
 }
 

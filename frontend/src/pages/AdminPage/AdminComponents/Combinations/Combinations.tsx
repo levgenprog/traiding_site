@@ -3,47 +3,10 @@ import styles from './Combinations.module.css'
 
 import { ICombination } from "../../../../models/ICombination";
 import RuleService from "../../../../servises/RuleService";
-import { IRule } from "../../../../models/IRule";
 import { getAlmatyTime } from "../../../../hooks/callbacks";
+import { IAdditionalOptions } from "../../../../models/ILevarage";
+import { Stack } from "@mui/material";
 
-interface CombinationsMenu {
-    name: string
-    timeframe: '15m' | '1h' | '4h'
-    type: 'long' | 'short'
-}
-
-const menu: CombinationsMenu[] = [
-    {
-        name: '15 мин Long',
-        timeframe: '15m',
-        type: 'long'
-    },
-    {
-        name: '15 мин Short',
-        timeframe: '15m',
-        type: 'short'
-    },
-    {
-        name: '1 час Long',
-        timeframe: '1h',
-        type: 'long'
-    },
-    {
-        name: '1 час Short',
-        timeframe: '1h',
-        type: 'short'
-    },
-    {
-        name: '4 часа Long',
-        timeframe: '4h',
-        type: 'long'
-    },
-    {
-        name: '4 часа Short',
-        timeframe: '4h',
-        type: 'short'
-    }
-]
 
 const formatData = (data: string) => {
     const items = data.split('\n').filter(Boolean); // Remove empty strings
@@ -85,19 +48,21 @@ const formatDataMob = (data: string) => {
 
 const Combinations: FC = () => {
     const [combinations, setCombinations] = useState<ICombination[]>([]);
-    const [active, setActive] = useState<CombinationsMenu>(menu[0]);
-    const [mobActive, setMobActive] = useState<string>('15 мин Long');
-    const [isSettings, setIsSettings] = useState(false);
-    const [rules, setRules] = useState<IRule[]>([]);
+    const [formData, setFormData] = useState<IAdditionalOptions>({
+        first: '7d',
+        second: '3d',
+        third: '4h'
+    });
+    const [secondOptions, setSecondOptions] = useState(['3d', '1d']);
+    const [thirdOptions, setThirdOptions] = useState(['4h']);
+    const [type, setType] = useState<'long' | 'short'>('long');
 
-    const changeActive = (id: number) => {
-        setActive(menu[id]);
-        setIsSettings(false);
-    }
 
     const getConnections = async () => {
         try {
-            const response = (await RuleService.getConnections(active.timeframe, active.type)).data;
+            const response = (await RuleService.getConnections(
+                `${formData.first}${formData.second}${formData.third}`,
+                type)).data;
             setCombinations([...response]);
         } catch (e: any) {
             console.log(e);
@@ -105,175 +70,161 @@ const Combinations: FC = () => {
         }
     }
 
-    const getRules = async () => {
-        try {
-            const response = (await RuleService.getRules()).data;
-            setRules(response);
-        } catch (e: any) {
-            console.log(e);
+    const handleFirstOptionChange = (value: string) => {    
+        switch(value) {
+          case '7d':
+            setSecondOptions(['3d', '1d']);
+            setThirdOptions(['4h']);
+            setFormData((prev) => ({
+              ...prev,
+              first: value,
+              second: '3d',
+              third: '4h'
+            }));
+            break;
+          case '3d':
+            setSecondOptions(['1d', '4h']);
+            setThirdOptions(['4h', '1h']);
+            setFormData((prev) => ({
+              ...prev,
+              first: value,
+              second: '1d',
+              third: '4h'
+            }));
+            break;
+          case '1d':
+            setSecondOptions(['4h']);
+            setThirdOptions(['1h', '15m']);
+            setFormData((prev) => ({
+              ...prev,
+              first: value,
+              second: '4h',
+              third: '1h'
+            }));
         }
-    }
+    };
 
-    const toggleStatus = async (ruleId: number) => {
-        const ruleIndex = rules.findIndex(rule => rule.ruleid === ruleId);
-
-        if (ruleIndex !== -1) {
-            await RuleService.changeConnectionStatus(rules[ruleIndex].ruleid);
-            setRules(prevRules =>
-                prevRules.map((rule, index) =>
-                    index === ruleIndex ? { ...rule, connect_status: !rule.connect_status } : rule
-                )
-            );
+    const handleSecondOptionChange = (value: string) => {
+        if (formData.first === '3d') {
+          if (value === '4h') {
+            setThirdOptions(['1h']);
+          } else {
+            setThirdOptions(['4h', '1h'])
+          }
+          setFormData((prev) => ({
+            ...prev,
+            second: value,
+            third: '1h'
+          }));
+        } else {
+          setFormData((prev) => ({
+            ...prev,
+            second: value
+          }))
         }
-    }
+    };
 
     useEffect(() => {
-        if (!isSettings) {
+        getConnections();
+        const fetchInterval = setInterval(() => {
             getConnections();
-            const fetchInterval = setInterval(() => {
-                getConnections();
-            }, 600000);
+        }, 600000);
 
-            return () => {
-                clearInterval(fetchInterval);
-            };
-        } else {
-            getRules();
-        }
-
-    }, [active, isSettings]);
+        return () => {
+            clearInterval(fetchInterval);
+        };
+    }, [formData, type]);
 
     return (
         <div className={styles.combinations}>
 
             <h1>Совмещения</h1>
-            <ul className={styles.menu}>
+            {/* <ul className={styles.menu}>
                 {menu.map((elem: CombinationsMenu, index: number) => (
                     <li key={elem.name}
                         className={active === elem ? styles.menu_active : ''}
                         onClick={() => changeActive(index)}>{elem.name}
                     </li>
                 ))}
-                <li
-                    className={isSettings ? styles.menu_active : ''}
-                    onClick={() => {
-                        setIsSettings(!isSettings);
-                        setActive(menu[-1])
-                    }}>
-                    Настройки
-                </li>
-            </ul>
+            </ul> */}
 
-            <div className={styles.selectContainer}>
+            <div className={styles.addSection}>
+                <div className={styles.selectContainer}>
                 <select
-                    value={mobActive}
-                    onChange={(event) => {
-                        setActive(menu.find((item) => item.name === event.target.value)?? menu[0]);
-                        setMobActive(event.target.value);
-                        if (event.target.value === 'Настройки') {
-                            setIsSettings(true);
-                        } else {
-                            setIsSettings(false);
-                        }
-                    }}
-                    className={styles.menuSelect}
+                    value={formData.first}
+                    onChange={(e) => handleFirstOptionChange(e.target.value)}
                     >
-                    {menu.map((item) => (
-                        <option key={item.name} value={item.name}>
-                        {item.name}
-                        </option>
-                    ))}
-                    <option value="Настройки" onClick={() => {
-                        setIsSettings(true);
-                        setActive(menu[-1]);
-                        }}>
-                        Настройки
-                    </option>
+                    <option value={'7d'}>7d</option>
+                    <option value={'3d'}>3d</option>
+                    <option value={'1d'}>1d</option>
                 </select>
+                </div>
+                <svg className={styles.svgIcon} viewBox="-0.16 -0.16 16.32 16.32" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M8 6L8 2L10 2L16 8L10 14L8 14L8 10L-1.74845e-07 10L-3.01991e-07 6L8 6Z" fill="#ffffff"></path> </g></svg>
+                <div className={styles.selectContainer}>
+                <select
+                    value={formData.second}
+                    onChange={(e) => handleSecondOptionChange(e.target.value)}>
+                    {secondOptions.map((val) => (
+                    <option value={val} key={val}>{val}</option>
+                    )) }
+                </select>
+                </div>
+                <svg className={styles.svgIcon} viewBox="-0.16 -0.16 16.32 16.32" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M8 6L8 2L10 2L16 8L10 14L8 14L8 10L-1.74845e-07 10L-3.01991e-07 6L8 6Z" fill="#ffffff"></path> </g></svg>
+                <div className={styles.selectContainer}>
+                <select
+                value={formData.third}
+                onChange={(e) => setFormData((prev) => ({
+                    ...prev,
+                    third: e.target.value
+                }))}>
+                    {thirdOptions.map((val) => (
+                    <option value={val} key={val}>{val}</option>
+                    ))}
+                </select>
+                </div>
             </div>
 
+            <Stack direction="row" gap="1.5rem" justifyContent="center">
+                <div 
+                    className={type === 'long' ? styles.menu_active : styles.menu} 
+                    onClick={() => setType('long')}>
+                    Long
+                </div>
+                <div 
+                    className={type === 'short' ? styles.menu_active : styles.menu} 
+                    onClick={() => setType('short')}>
+                    Short
+                </div>
+            </Stack>
+
+
             <table className={styles.combTable}>
-                {isSettings ? (<caption>Управление правилами на 15м (1час совмещение)</caption>) : null}
                 <thead>
-                    {isSettings ? (
-                        <tr>
-                            <th>Правило</th>
-                            <th>Описание</th>
-                            <th>Тип</th>
-                            <th>Connect Status</th>
-                        </tr>
-                    ) : (
-                        <tr>
-                            <th>Trading Pair</th>
-                            <th>Data</th>
-                            <th>Timestamp</th>
-                        </tr>
-                    )}
+                    <tr>
+                        <th>Trading Pair</th>
+                        <th>Data</th>
+                        <th>Timestamp</th>
+                    </tr>
                 </thead>
                 <tbody>
-                    {isSettings ? (
-                        rules.map((elem: IRule) => (
-                            <tr key={elem.ruleid}>
-                                <td>{elem.rulename}</td>
-                                <td>{elem.description}</td>
-                                <td>{elem.type}</td>
-                                <td>
-                                    <label className={styles.switch}>
-                                        <input
-                                            type="checkbox"
-                                            checked={elem.connect_status}
-                                            onChange={() => toggleStatus(elem.ruleid)}
-                                        />
-                                        <span className={`${styles.slider} ${styles.round}`}></span>
-                                    </label>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
-                        combinations.map((elem: ICombination) => (
-                            <tr key={elem.connectid}>
-                                <td>
-                                    <a href={`https://www.tradingview.com/chart/?symbol=BINANCE:${elem.tradingpair}.P`} target="_blank">
-                                        {elem.tradingpair}.P
-                                    </a>
-                                </td>
-                                <td>
-                                    {formatData(elem.data)}
-                                </td>
-                                <td>{getAlmatyTime(elem.timestamp)}</td>
-                            </tr>
-                        ))
-                    )}
-
+                    {combinations.map((elem: ICombination) => (
+                        <tr key={elem.connectid}>
+                            <td>
+                                <a href={`https://www.tradingview.com/chart/?symbol=BINANCE:${elem.tradingpair}.P`} target="_blank">
+                                    {elem.tradingpair}.P
+                                </a>
+                            </td>
+                            <td>
+                                {formatData(elem.data)}
+                            </td>
+                            <td>{getAlmatyTime(elem.timestamp)}</td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
 
             <div className={styles.cards}>
-                {isSettings ? (
-                    rules.map((elem: IRule) => (
-                        <div key={elem.ruleid} className={styles.card}>
-                            <div className={styles.cardHeader}>{elem.rulename}</div>
-                            <div className={styles.cardContent}>
-                                <span>Описание:</span> <span>{elem.description}</span>
-                            </div>
-                            <div className={styles.cardContent}>
-                                <span>Тип:</span> <span>{elem.type}</span>
-                            </div>
-                            <div className={styles.cardContent}>
-                                <span>Connect Status:</span>
-                                <label className={styles.switch}>
-                                    <input
-                                        type="checkbox"
-                                        checked={elem.connect_status}
-                                        onChange={() => toggleStatus(elem.ruleid)}
-                                    />
-                                    <span className={`${styles.slider} ${styles.round}`}></span>
-                                </label>
-                            </div>
-                        </div>
-                    ))
-                ) : (
-                    combinations.map((elem: ICombination) => (
+                {combinations.map((elem: ICombination) => (
                         <div key={elem.connectid} className={styles.card}>
                             <div className={styles.cardHeader}>
                                 <a href={`https://www.tradingview.com/chart/?symbol=BINANCE:${elem.tradingpair}.P`} target="_blank">
@@ -288,8 +239,7 @@ const Combinations: FC = () => {
                                 <span>Timestamp:</span> <span>{getAlmatyTime(elem.timestamp)}</span>
                             </div>
                         </div>
-                    ))
-                )}
+                    ))}
             </div>
         </div>
     )

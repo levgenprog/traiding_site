@@ -37,13 +37,13 @@ export default function Hero() {
             variant="h1"
             sx={{
               display: 'flex',
-              flexDirection: { xs: 'column', md: 'row' },
+              flexDirection: { xs: 'column', md: 'column' },
               alignSelf: 'center',
               textAlign: 'center',
               fontSize: 'clamp(3.5rem, 10vw, 4rem)',
             }}
           >
-            The bot you&nbsp;
+            Crypto Trading Bot by&nbsp;
             <Typography
               component="span"
               variant="h1"
@@ -53,7 +53,7 @@ export default function Hero() {
                   theme.palette.mode === 'light' ? 'primary.main' : 'primary.light',
               }}
             >
-              trust
+              FlowCapital
             </Typography>
           </Typography>
           <Typography
@@ -90,7 +90,7 @@ export default function Hero() {
             alignSelf: 'center',
             height: { xs: 200, sm: 700 },
             width: '100%',
-            backgroundImage: 'url("https://mui.com/static/images/templates/templates-images/hero-dark.png")',
+            backgroundImage: 'url("./images/landingmainimg.png")',
             backgroundSize: 'cover',
             borderRadius: '10px',
             outline: '1px solid',

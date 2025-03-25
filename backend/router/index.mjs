@@ -661,7 +661,7 @@ router.get('/dumps/time/:id', rulesController.getDumpForHours);
 
 router.get('/dumps/topsignals/:timeframe/:pair', rulesController.getTopSignal);
 
-router.get('/settings/options', rulesController.getAdditionalOptions);
-router.put('/settings/options', rulesController.updateAdditionalOptions);
+router.get('/settings/options/timeframe', rulesController.getAdditionalOptions);
+router.put('/settings/options/timeframe', rulesController.updateAdditionalOptions);
 
 export default router;

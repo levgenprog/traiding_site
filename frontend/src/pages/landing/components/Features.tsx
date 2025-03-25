@@ -16,27 +16,27 @@ import ViewQuiltRoundedIcon from '@mui/icons-material/ViewQuiltRounded';
 const items = [
   {
     icon: <ViewQuiltRoundedIcon />,
-    title: 'Dashboard',
+    title: '8 Unique Trading Strategies',
     description:
-      'This item could provide a snapshot of the most important metrics or data points related to the product.',
-    imageLight: 'url("/static/images/templates/templates-images/dash-light.png")',
-    imageDark: 'url("/static/images/templates/templates-images/dash-dark.png")',
+      'Performance is not affected by market conditions. Even during market crashes, this strategy maintains solid returns.',
+    imageLight: 'url("./images/strategies.png")',
+    imageDark: 'url("./images/strategies.png")',
   },
   {
     icon: <EdgesensorHighRoundedIcon />,
-    title: 'Mobile integration',
+    title: 'Full Report',
     description:
-      'This item could provide information about the mobile app version of the product.',
-    imageLight: 'url("/static/images/templates/templates-images/mobile-light.png")',
-    imageDark: 'url("/static/images/templates/templates-images/mobile-dark.png")',
+      'You can see bot trading report on website, telegram alerts and Binance trade history',
+    imageLight: 'url("./images/fullreport.png")',
+    imageDark: 'url("./images/fullreport.png")',
   },
   {
     icon: <DevicesRoundedIcon />,
     title: 'Available on all platforms',
     description:
-      'This item could let users know the product is available on all platforms, such as web, mobile, and desktop.',
-    imageLight: 'url("/static/images/templates/templates-images/devices-light.png")',
-    imageDark: 'url("/static/images/templates/templates-images/devices-dark.png")',
+      'You can access our platform from any device.',
+    imageLight: 'url("./images/crossplatform.png")',
+    imageDark: 'url("./images/crossplatform.png")',
   },
 ];
 
@@ -62,9 +62,7 @@ export default function Features() {
               color="text.secondary"
               sx={{ mb: { xs: 2, sm: 4 } }}
             >
-              Here you can provide a brief overview of the key features of the
-              product. For example, you could list the number of features, the types
-              of features, add-ons, or the benefits of the features.
+              All of it is at the core of our strategies, that are working on different scenarios for different tasks - saving money, highly profitable investments or medium risk assets management.
             </Typography>
           </div>
           <Grid container item gap={1} sx={{ display: { xs: 'auto', sm: 'none' } }}>
@@ -111,6 +109,7 @@ export default function Features() {
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 minHeight: 280,
+                backgroundRepeat: 'no-repeat',
               }}
             />
             <Box sx={{ px: 2, pb: 2 }}>
@@ -262,6 +261,9 @@ export default function Features() {
                   theme.palette.mode === 'light'
                     ? items[selectedItemIndex].imageLight
                     : items[selectedItemIndex].imageDark,
+
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
               }}
             />
           </Card>
